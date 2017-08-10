@@ -173,10 +173,12 @@ class MicList(APIView):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, format=None):
-        import ipdb; ipdb.set_trace();
+        # import ipdb; ipdb.set_trace();
         serializer = MicSerializer(data=request.data)
         if serializer.is_valid():
-           serializer.validated_data['file'].name
+           file = serializer.validated_data['file']
+           file.name = file.name + '.webm'
+
            serializer.save()
            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

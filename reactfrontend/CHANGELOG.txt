@@ -1,0 +1,49 @@
+got the following to work:
+
+
+May 9th 2017:
+- soundcloud api on npm
+
+Mic Components 
+- react sound recorder widget
+- upload audio/webm blob and save to file on node server
+- download uploaded files back onto client !!!! woooooooooo
+
+
+
+
+Todo: link each scroll to multiple recordings, then fetch em and list beside scroll
+
+
+May 13th 2017:
+
+Added HUD
+    - [frame ] regex for imageview
+
+- cursor tracking in textarea
+
+
+May 18th 2017:
+
+- Multiple Recordings w/ Description Feature
+   relate recordings to single scroll
+
+- Add MongoDB to server instead of in-memory DB
+   sync up files to mongo db mic colleciton (painful)
+   TODO: use mongoose
+   TODO: ask a sage if this is crazy and DRF would be saner
+        w/ built in file models etc..
+
+- Refactor api from text to scroll
+
+
+#TODO: HUD as component
+#TODO: Add state manager so React-MIC can save blob on different scrolls.
+
+
+August 10th 2017:
+
+- Rewrite cowboy express/nodejs backend in django-rest-framework
+- Be amazed that it still manages to function
+- Consider doing frontend in vue lol
+
