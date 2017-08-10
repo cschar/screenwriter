@@ -1,0 +1,31 @@
+
+save from shell
+
+from django.core.files import File
+p = Pic.objects.create(scroll=Scroll.objects.last())
+p.pic.save('kerm.png', File(open('/users/codyscharfe/mdev/reacttraining/server/public/frames/1.png','rb')))
+
+uploading an imagefield via api:
+
+
+curl -X POST -S \
+  -H 'Content-Type: application/json' \
+  -u "name:pass" \
+  --data-binary '{\
+    "image":"/users/codyscharfe/mdev/reacttraining/server/public/frames/1.png"}' \
+  127.0.0.1:3000/pics/
+
+
+
+curl -X POST -S \
+  -H "Content-Type: application/json" \
+  --data-binary '{\
+    "image":"/users/codyscharfe/mdev/reacttraining/server/public/frames/1.png"}' \
+  127.0.0.1:3000/pics/
+
+
+  http --form POST localhost:3000/pics/ scroll="2" image@/users/codyscharfe/mdev/reacttraining/server/public/frames/1.png
+
+
+  http --form POST localhost:3000/mics/ scroll="2" file@/users/codyscharfe/mdev/reacttraining/server/recordedMics/1/2_blah.webm  owner="1"
+

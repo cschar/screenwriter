@@ -1,0 +1,7 @@
+.idea
+
+
+#django
+db.sqlite3
+media
+
