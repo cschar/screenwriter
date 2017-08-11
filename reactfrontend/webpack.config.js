@@ -18,7 +18,11 @@ var config = {
     rules: [
       { test: /\.(js)$/,
         exclude: /server/,
-        use: 'babel-loader' },
+        loader: 'babel-loader',
+        query: {
+            presets: ['es2015', 'react', 'stage-2']
+        }
+      },
       
       { test: /\.css$/,
         exclude: /server/,

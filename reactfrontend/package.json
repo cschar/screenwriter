@@ -36,6 +36,7 @@
   },
   "dependencies": {
     "axios": "^0.16.1",
+    "babel-preset-stage-2": "^6.24.1",
     "prop-types": "^15.5.8",
     "query-string": "^4.3.4",
     "react": "^15.5.4",
