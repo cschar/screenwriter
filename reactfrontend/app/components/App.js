@@ -10,7 +10,7 @@ var Nav = require('./nav.js');
 import Home from './Home';
 import {ScrollList} from './ScrollList';
 import {RecentMics} from './RecentMics';
-import {ScrollContainer} from './ScrollContainer';
+import {ScrollContainer, MyScrolls} from './ScrollContainer';
 
 
 class App extends React.Component {
@@ -22,6 +22,7 @@ class App extends React.Component {
 			  <Switch>
 			    <Route exact path='/' component={Home} />
 			    <Route path='/scrolls' component={ScrollContainer} />
+			    <Route path='/myscrolls' component={MyScrolls} />
           <Route path='/recentmics' component={RecentMics} />
           <Route render={function () {
           	return <p> Not Found </p>

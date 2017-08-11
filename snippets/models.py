@@ -67,3 +67,8 @@ class Mic(models.Model):
     file = models.FileField(upload_to ='mic_uploads/', null=True)
     scroll = models.ForeignKey(Scroll, blank=True, null=True)
     description = models.CharField(max_length=200, blank=True, null=True)
+
+
+class AuthInfo(models.Model):
+    user = models.ForeignKey('auth.User', related_name='authinfo', null=True)
+    google_tokenId = models.CharField(max_length=1200, null=True, blank=True)

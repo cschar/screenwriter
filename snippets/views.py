@@ -6,7 +6,7 @@ from django.shortcuts import render
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from snippets.models import Snippet, Scroll, Pic, Mic
+from snippets.models import Snippet, Scroll, Pic, Mic, AuthInfo
 from snippets.permissions import IsOwnerOrReadOnly
 from snippets.serializers import SnippetSerializer, ScrollSerializer, PicSerializer, MicSerializer
 
@@ -16,6 +16,9 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+
+from rest_framework import renderers
+from rest_framework.response import Response
 
 
 # class SnippetList(APIView):
@@ -33,23 +36,6 @@ from rest_framework import status
 #             serializer.save()
 #             return Response(serializer.data, status=status.HTTP_201_CREATED)
 #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-from snippets.models import Snippet
-from snippets.serializers import SnippetSerializer
-from rest_framework import generics
-
-from rest_framework import permissions
-
-
-class SnippetList(generics.ListCreateAPIView):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-
-
-    queryset = Snippet.objects.all()
-    serializer_class = SnippetSerializer
-
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
-
 
 
 # class SnippetDetail(APIView):
@@ -79,6 +65,28 @@ class SnippetList(generics.ListCreateAPIView):
 #         snippet = self.get_object(pk)
 #         snippet.delete()
 #         return Response(status=status.HTTP_204_NO_CONTENT)
+
+from snippets.serializers import UserSerializer
+from django.contrib.auth.models import User, AnonymousUser
+
+from snippets.models import Snippet
+from snippets.serializers import SnippetSerializer
+from rest_framework import generics
+from rest_framework import permissions
+
+
+class SnippetList(generics.ListCreateAPIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+
+    queryset = Snippet.objects.all()
+    serializer_class = SnippetSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+
+
 class SnippetDetail(generics.RetrieveUpdateDestroyAPIView):
 
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
@@ -87,8 +95,6 @@ class SnippetDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer
 
-from snippets.serializers import UserSerializer
-from django.contrib.auth.models import User
 
 
 class UserList(generics.ListAPIView):
@@ -105,6 +111,39 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
+from rest_framework.authtoken.models import Token
+
+@api_view(['POST'])
+def google_oauth2_login(request):
+    """
+    this is so bad, no time to implement auth properly
+    """
+    # import ipdb; ipdb.set_trace();
+
+    access_token = request.data['access_token']
+    import requests
+    authorization_header = {"Authorization": "OAuth %s" % access_token}
+    r = requests.get("https://www.googleapis.com/oauth2/v2/userinfo",
+                   headers=authorization_header)
+
+    if r.status_code != 200:  # 401
+        #invalid access_token was sent from client
+        return Response({}, status=status.HTTP_401_UNAUTHORIZED)
+    else:
+        user_data = r.json()
+        #create / login user
+        #send back token to use api
+        user, _ = User.objects.get_or_create(email=user_data['email'])
+
+        token, _ = Token.objects.get_or_create(user=user)
+
+        return Response({
+            'token': token.key
+        })
+
+from rest_framework.authentication import TokenAuthentication
+
+
 
 @api_view(['GET'])
 def api_root(request, format=None):
@@ -113,9 +152,6 @@ def api_root(request, format=None):
         'snippets': reverse('snippet-list', request=request, format=format)
     })
 
-
-from rest_framework import renderers
-from rest_framework.response import Response
 
 class SnippetHighlight(generics.GenericAPIView):
     queryset = Snippet.objects.all()
@@ -128,7 +164,30 @@ class SnippetHighlight(generics.GenericAPIView):
 
 
 
+class PrivateScrollList(APIView):
+
+    #http://www.django-rest-framework.org/api-guide/authentication/#tokenauthentication
+    #header sent from client ex:
+    #Authorization: Token 9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, format=None):
+        import ipdb; ipdb.set_trace();
+
+        scrolls = Scroll.objects.filter(author=request.user)
+        serializer = ScrollSerializer(scrolls,
+                                      many=True,
+                                      context={'request': request})
+        #doesn't give data.results just data..
+        #but ScrollLIst view below gives data.results hm
+        return Response(serializer.data)
+
+
 class ScrollList(generics.ListCreateAPIView):
+    # permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = (TokenAuthentication,)
+
     queryset = Scroll.objects.all()
     serializer_class = ScrollSerializer
 

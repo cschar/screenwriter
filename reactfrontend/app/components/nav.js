@@ -18,6 +18,11 @@ function Nav () {
 			   	  </NavLink>
 			   </li>
 			   <li>
+			     <NavLink exact activeClassName='active' to='/myscrolls'>
+			   	  	my scrolls
+			   	  </NavLink>
+			   </li>
+			   <li>
 			   	  <NavLink exact activeClassName='active' to='/recentmics'>
 			   	  	RecentMics
 			   	  </NavLink>

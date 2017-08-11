@@ -6,6 +6,9 @@ const initialState = {
   todos: [],
   isLoading: false,
   user: 'MARY',
+  userName: '',
+  userImage: '',
+  userToken: '',
 };
 
 const myReducer = (state = initialState, action) => {
@@ -14,15 +17,21 @@ const myReducer = (state = initialState, action) => {
         console.log('add_user action:');
         console.log(action)
         console.log(state);
-        //state.user = 'bob';
-      //push({
-      //    id: action.id,
-      //    text: action.text,
-      //    completed: false
-      //  });
+
         return {
         ...state,
-        user: "BOB"
+        user: action.text
+      }
+    case 'SET_USER_INFO':
+      return {
+        ...state,
+        userName: action.userName,
+        userImage: action.userImage
+      }
+    case 'SET_USER_TOKEN':
+      return {
+        ...state,
+        userToken: action.userToken
       }
 
     default:

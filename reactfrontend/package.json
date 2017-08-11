@@ -48,6 +48,7 @@
     "react-sketchpad": "0.0.3",
     "react-textarea-autosize": "^4.3.0",
     "redux": "^3.7.2",
+    "redux-auth": "0.0.5-beta5",
     "sketchpad": "^0.1.0",
     "soundcloud-audio": "^1.1.0"
   }

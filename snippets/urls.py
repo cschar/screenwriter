@@ -45,6 +45,14 @@ urlpatterns += [
                                namespace='rest_framework')),
 ]
 
+urlpatterns += [
+    url(r'^client-google-oauth2-login/$', views.google_oauth2_login,
+        name='google-oauth2-login'),
+
+    url(r'^myscrolls/$', views.PrivateScrollList.as_view(),
+        name='private-scroll-list'),
+]
+
 from django.conf.urls.static import static
 
 if settings.DEBUG:

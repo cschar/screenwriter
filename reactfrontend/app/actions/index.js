@@ -7,8 +7,18 @@ export const addTodo = (text) => ({
 
 export const addUser = (text) => ({
   type: 'ADD_USER',
-  id: nextTodoId++,
-  text
+  text: text
+})
+
+export const setUserInfo = (userName, userImage) => ({
+  type: 'SET_USER_INFO',
+  userName: userName,
+  userImage: userImage
+})
+
+export const setUserToken = (userToken) => ({
+  type: 'SET_USER_TOKEN',
+  userToken: userToken
 })
 
 export const setVisibilityFilter = (filter) => ({

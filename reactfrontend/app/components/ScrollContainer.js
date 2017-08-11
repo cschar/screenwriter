@@ -13,7 +13,74 @@ var RecordedMics = require('./Mic.js').RecordedMics;
 
 import {Scroll} from './Scroll';
 
+import store from '../store'
+import { connect } from 'react-redux';
 
+const mapStateToProps = function(store) {
+	console.log("mapping state to porops")
+	console.log(store.todos)
+	console.log(store.myReducer)
+
+  return {
+    userName: store.myReducer.user,
+    daGoogleImage: store.myReducer.userImage,
+    daGoogleName: store.myReducer.userName,
+    userToken: store.myReducer.userToken
+  };
+}
+
+class MyScrolls extends React.Component {
+	constructor(props){
+		super(props);
+		this.state = {
+			scrolls: [],
+		}
+	}
+
+
+	componentDidMount() {
+		var token = 'Token ' + this.props.userToken;
+		// var token = 'Token 0c9c8cbda446333a41d2fd87eb847d229ca7b1e0'
+		axios.defaults.headers.common['Authorization'] = token;
+
+		
+		// axios.get('http://localhost:3000/myscrolls/')
+		axios.get('http://localhost:3000/myscrolls/')
+		.then( function(resp){
+					console.log('axios myscrolls')
+					console.log(resp)
+
+					this.setState({
+			  		scrolls: resp.data
+			  	})
+				}.bind(this))
+			.catch( (error) => ( console.log(error)));
+	}
+
+
+	render() {
+		// console.log(this.state.scrolls)
+		var scrolls = this.state.scrolls.map(function (scroll){
+			return ( <li key={scroll.id}>
+								 <h3> {scroll.id} </h3>
+			           <Scroll className=''
+					      
+			                   text={scroll.text}
+			                   id={scroll.id}/>
+			         </li>)
+		}.bind(this))
+
+		return (
+			<div className='scroll-list-container'>
+				<h3>  as {this.props.userName} </h3>
+				<h3> token {this.props.userToken} </h3>
+			     <ul>
+					{scrolls}
+					</ul>
+			</div>
+			)
+	}
+}
 
 class ScrollContainer extends React.Component {
 	constructor(props){
@@ -85,4 +152,8 @@ class ScrollContainer extends React.Component {
 	}
 }
 
-module.exports = { ScrollContainer}
+
+ScrollContainer = connect(mapStateToProps)(ScrollContainer)
+MyScrolls = connect(mapStateToProps)(MyScrolls)
+
+module.exports = { ScrollContainer, MyScrolls}
