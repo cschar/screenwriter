@@ -1,5 +1,7 @@
 .idea
 
+#reactfrontend
+reactfrontend/node_modules
 
 #django
 db.sqlite3

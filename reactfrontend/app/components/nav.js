@@ -9,24 +9,20 @@ function Nav () {
 			<ul className='nav'>
 				<li>
 			     <NavLink exact activeClassName='active' to='/'>
-			   	  	Scroll
-			   	  </NavLink>
-			   </li>
-			   <li>
-			   	  <NavLink exact activeClassName='active' to='/home'>
 			   	  	Home
 			   	  </NavLink>
 			   </li>
 			   <li>
-			   	  <NavLink activeClassName='active' to='/battle'>
-			   	  	Battle
+			     <NavLink exact activeClassName='active' to='/scrolls'>
+			   	  	Continuous
 			   	  </NavLink>
 			   </li>
 			   <li>
-			   	  <NavLink activeClassName='active' to='/popular'>
-			   	  	Popular
+			   	  <NavLink exact activeClassName='active' to='/recentmics'>
+			   	  	RecentMics
 			   	  </NavLink>
 			   </li>
+			   
 			</ul>
 		)
 }

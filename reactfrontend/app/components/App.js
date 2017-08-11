@@ -4,14 +4,13 @@ var Router = ReactRouter.BrowserRouter;
 var Route = ReactRouter.Route;
 var Switch = ReactRouter.Switch;
 
-var Popular = require('./popular.js');
-var Nav = require('./nav.js');
-var Home = require('./Home.js');
-var Battle = require('./Battle.js');
-var Results = require('./Results.js');
-// var Scroll = require('./Scroll.js');
 
-import {ScrollContainer} from '../scrollComponents/Scroll';
+var Nav = require('./nav.js');
+
+import Home from './Home';
+import {ScrollList} from './ScrollList';
+import {RecentMics} from './RecentMics';
+import {ScrollContainer} from './ScrollContainer';
 
 
 class App extends React.Component {
@@ -21,11 +20,9 @@ class App extends React.Component {
 			<div className='container'>
 			  <Nav/>
 			  <Switch>
-			    <Route exact path='/' component={ScrollContainer} />
-          <Route path='/popular' component={Popular} />
-          <Route exact path='/home' component={Home} />
-          <Route exact path='/battle' component={Battle} />
-					<Route path='/battle/results' component={Results} />
+			    <Route exact path='/' component={Home} />
+			    <Route path='/scrolls' component={ScrollContainer} />
+          <Route path='/recentmics' component={RecentMics} />
           <Route render={function () {
           	return <p> Not Found </p>
           }} />
