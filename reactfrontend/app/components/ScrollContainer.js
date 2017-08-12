@@ -8,8 +8,7 @@ import TextareaAutosize from 'react-autosize-textarea';
 var PropTypes = require('prop-types');
 
 
-var Audio = require('./Audio.js');
-var RecordedMics = require('./Mic.js').RecordedMics;
+import MicList from './MicList';
 
 import {Scroll} from './Scroll';
 
@@ -39,12 +38,12 @@ class MyScrolls extends React.Component {
 
 
 	componentDidMount() {
-		var token = 'Token ' + this.props.userToken;
-		// var token = 'Token 0c9c8cbda446333a41d2fd87eb847d229ca7b1e0'
-		axios.defaults.headers.common['Authorization'] = token;
-
 		
-		// axios.get('http://localhost:3000/myscrolls/')
+		//not working  in reducer...
+		var token = 'Token ' + this.props.userToken;
+    // var token = 'Token ' + this.props.userToken;
+    axios.defaults.headers.common['Authorization'] = token;
+
 		axios.get('http://localhost:3000/myscrolls/')
 		.then( function(resp){
 					console.log('axios myscrolls')
@@ -126,7 +125,12 @@ class ScrollContainer extends React.Component {
 		// console.log(this.state.scrolls)
 		var scrolls = this.state.scrolls.map(function (scroll){
 			return ( <li key={scroll.id}>
-								 <h3> {scroll.id} </h3>
+								 <h3> {scroll.id} <Link to={'/scrolls/'+scroll.id}>
+									Edit 
+								</Link>
+								</h3>
+								 
+							
 			           <Scroll className=''
 					           changeHUD={this.changeHUD}
 			                   text={scroll.text}
@@ -144,6 +148,7 @@ class ScrollContainer extends React.Component {
 				</div>*/}
 				
 				<button className='button' onClick={this.addScroll}> Add</button>
+			    
 			     <ul>
 					{scrolls}
 					</ul>

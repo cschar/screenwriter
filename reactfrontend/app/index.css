@@ -14,6 +14,7 @@ li {
 a {
   text-decoration: none;
   color: #d0021b;
+  /*color: #3b90ea;*/
 }
 
 .container {
@@ -150,6 +151,8 @@ a {
   flex-direction: column;
   margin:3px auto;
 }
+
+
 
 
 .scroll-list-container {

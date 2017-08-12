@@ -47,3 +47,29 @@ August 10th 2017:
 - Be amazed that it still manages to function
 - Consider doing frontend in vue lol
 
+August 11th 2017:
+
+- Learn basics of Redux via todoapp
+
+- Use google Oauth2 frontend react component
+    - get the access_token and validate server side its legit
+    - grant user api token after oauth2 login
+
+- User redux to manage clientside auth state
+
+- figure out drf private apis
+ (Why does it return data, and not data.results...
+  queryset related?)
+
+
+August 12th 2017:
+
+- Created scroll Edit Detail
+  - massive move around of react components
+  - Pain in the ass learning about props not updating components, but only state
+  - Edit detail for recording Mics, continous just for listening
+
+- Redux persist state using localStorage on browser
+- Loging / Logout functionality
+
+TODO: Loading widget when serverside oauth2 validation goin on

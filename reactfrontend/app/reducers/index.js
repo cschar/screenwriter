@@ -1,9 +1,10 @@
 import { combineReducers } from 'redux'
 //import todos from './todos'
 //import visibilityFilter from './visibilityFilter'
+var axios = require('axios');
+
 
 const initialState = {
-  todos: [],
   isLoading: false,
   user: 'MARY',
   userName: '',
@@ -29,10 +30,15 @@ const myReducer = (state = initialState, action) => {
         userImage: action.userImage
       }
     case 'SET_USER_TOKEN':
+    var token = 'Token ' + action.userToken;
+    // var token = 'Token ' + this.props.userToken;
+    axios.defaults.headers.common['Authorization'] = token;
       return {
         ...state,
         userToken: action.userToken
       }
+    case 'DEL_USER_INFO':
+      return initialState
 
     default:
       return state

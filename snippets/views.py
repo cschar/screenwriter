@@ -131,9 +131,12 @@ def google_oauth2_login(request):
         return Response({}, status=status.HTTP_401_UNAUTHORIZED)
     else:
         user_data = r.json()
+        print 'verifying oauth access_token'
+        print user_data
         #create / login user
         #send back token to use api
-        user, _ = User.objects.get_or_create(email=user_data['email'])
+        user, _ = User.objects.get_or_create(username=user_data['given_name'],
+                                             email=user_data['email'])
 
         token, _ = Token.objects.get_or_create(user=user)
 
@@ -173,7 +176,7 @@ class PrivateScrollList(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, format=None):
-        import ipdb; ipdb.set_trace();
+        # import ipdb; ipdb.set_trace();
 
         scrolls = Scroll.objects.filter(author=request.user)
         serializer = ScrollSerializer(scrolls,

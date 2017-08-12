@@ -27,5 +27,6 @@ curl -X POST -S \
   http --form POST localhost:3000/pics/ scroll="2" image@/users/codyscharfe/mdev/reacttraining/server/public/frames/1.png
 
 
+//MIC upload
   http --form POST localhost:3000/mics/ scroll="2" file@/users/codyscharfe/mdev/reacttraining/server/recordedMics/1/2_blah.webm  owner="1"
 

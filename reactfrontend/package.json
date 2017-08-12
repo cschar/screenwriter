@@ -42,6 +42,7 @@
     "react": "^15.5.4",
     "react-autosize-textarea": "^0.4.3",
     "react-dom": "^15.5.4",
+    "react-fontawesome": "^1.6.1",
     "react-google-login": "^2.9.3",
     "react-mic": "^3.1.5",
     "react-router-dom": "^4.1.1",

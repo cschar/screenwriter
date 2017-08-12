@@ -1,23 +1,26 @@
 var React = require('react');
-var queryString = require('query-string');
-
 var axios = require('axios');
-// var Link = require('react-router-dom').Link;
+import MicRecorder from './MicRecorder';
+import MicList from './MicList'
+
 import {Link} from 'react-router-dom'
 import TextareaAutosize from 'react-autosize-textarea';
 
-var PropTypes = require('prop-types');
 
-import MicList from './MicList'
+/*
+Duplicates scroll stuff , 
 
+cause of props not updating when state is changed
+*/
+class ScrollDetail extends React.Component {
 
-class Scroll extends React.Component {
-	constructor(props){
+		constructor(props){
 		super(props);
-
 		this.state = {
+			scroll: null,
+			text: 'hey',
 			text: props.text,
-			id: props.id,
+			id: props.match.params.id,
 			oldCursorPosition: 0
 
 		}
@@ -56,6 +59,8 @@ class Scroll extends React.Component {
 		var selectionValue = event.target.value.slice(start, end)
 		console.log(selectionValue)
 	}
+
+
 	handleKeyDown(event){
 		
 		console.log('keypress')
@@ -67,7 +72,7 @@ class Scroll extends React.Component {
 		console.log(selectionValue)
 		
 		// console.log(this.props)
-		this.props.changeHUD(selectionValue)
+		// this.props.changeHUD(selectionValue)
 		this.scanTextForWidgetCode(selectionValue)
 	}
 
@@ -82,15 +87,40 @@ class Scroll extends React.Component {
 	"http://localhost:3000/frames/" + frame_match[1] + ".png" 
 					}
 
-			this.props.changeHUD(hud.text, hud.imgSrc)
+			// this.props.changeHUD(hud.text, hud.imgSrc)
 		}
 	}
 
-	render() {
+	
+
+
+	componentDidMount() {
+		let url = 'http://localhost:3000/scrolls/' + this.props.match.params.id +'/'
+		axios.get(url)
+		.then( function(resp){
+					console.log('axios scroll detail')
+					console.log(resp.data)
+
+					this.setState({
+			  		scroll: resp.data,
+			  		text: resp.data.text
+			  	})
+			  	console.log("state")
+			  	console.log(this.state)
+			  	this.forceUpdate();
+			  	// console.log(this.state.scroll.text)
+				}.bind(this))
+			.catch( (error) => ( console.log(error)));
+	}
+
+	render () {
+
 		return (
+			<div className='scroll-list-container'>
 			<div className='scroll'>
-				<MicList scrollID={this.props.id}/>
-				<TextareaAutosize id = {this.props.id} style={{ minHeight: 4}}
+				<MicRecorder scrollID={this.props.match.params.id}/>
+				<MicList scrollID={this.props.match.params.id}/>
+				<TextareaAutosize id = {this.props.match.params.id} style={{ minHeight: 4}}
 				                  //two options: innerREF giving this.textarea OR onChange callback using event target textarea
 								  //innerRef={ function(ref){ this.textarea = ref }.bind(this)}
 								  value={this.state.text}
@@ -104,20 +134,9 @@ class Scroll extends React.Component {
 				
 
 			</div>
+			</div>
 		)
 	}
 }
 
-Scroll.defaultProps = {
-  text: `sherri my dear
-			it has been so Loading
-
-			1. the way up the rabbit react-router-dom
-
-			2. The way down the rabbit hole`,
-  speed: 300
-};
-
-module.exports = { Scroll}
-// export Scroll;
-// export ScrollContainer;
+module.exports = ScrollDetail;

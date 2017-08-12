@@ -7,7 +7,15 @@ import { connect } from 'react-redux';
 var axios = require('axios');
 
 import GoogleLogin from 'react-google-login';
+// import FontAwesome from 'react-fontawesome';
 
+
+const logout = () => {
+	store.dispatch({
+				type:'DEL_USER_INFO',
+				userToken: response.data.token
+			})
+}
 
 const responseGoogle = (response) => {
 	console.log(response);
@@ -59,17 +67,43 @@ class Home extends React.Component {
 		console.log('dispatching');
 		store.dispatch({
 			type:'ADD_USER',
-			text: 'sampleTExt'
+			text: '==='
 		})
 
 	}
 
 	render () {
+
+		var auth_button;
+		if (!this.props.userToken){
+			auth_button = (<div><h2> Login </h2>
+				<GoogleLogin
+    clientId="766018239151-af6g358s6j3n7a5499cb5ac3n7lcn6bh.apps.googleusercontent.com"
+    
+    onSuccess={responseGoogle}
+    onFailure={responseGoogle}>
+   Google Login </GoogleLogin></div>)
+		 }else{
+		 		auth_button = ( <div><h2> Logout </h2>
+		 				<button onClick={function (){
+		 					console.log('click')
+		 					store.dispatch({
+		 						type: 'DEL_USER_INFO'
+		 					})
+		 				}}
+
+		 				> logout </button>
+		 			</div>
+		 			)
+		 }
+		
 		return (
 			<div className='home-container'>
+
 				<h1> Scroll screenwriter </h1>
 
 
+				<div> <img src={this.props.daGoogleImage} /> </div>
 	<button className='button' onClick={this.handleTestDispatch}>
 
 		<h1>dispatch {this.props.userName}</h1>
@@ -79,14 +113,9 @@ class Home extends React.Component {
     
 		 </button>
 
-				<h2> Login </h2>
-				<GoogleLogin
-			
-    clientId="766018239151-af6g358s6j3n7a5499cb5ac3n7lcn6bh.apps.googleusercontent.com"
-    buttonText="Google Login"
-    onSuccess={responseGoogle}
-    onFailure={responseGoogle}
-  />,
+				{auth_button}
+
+
 				<h3> Scroll screenwriter </h3>
 				<Link className='button' to='/scrolls'>
 				scrolls
