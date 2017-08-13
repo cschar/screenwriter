@@ -72,4 +72,8 @@ August 12th 2017:
 - Redux persist state using localStorage on browser
 - Loging / Logout functionality
 
-TODO: Loading widget when serverside oauth2 validation goin on
+August 13th 2017:
+ - Loading widget when serverside oauth2 validation goin on
+ - add some secure api calls for private scroll features
+ - recentmic page
+
