@@ -51,6 +51,8 @@ urlpatterns += [
 
     url(r'^myscrolls/$', views.PrivateScrollList.as_view(),
         name='private-scroll-list'),
+    url(r'^myscrolls/(?P<pk>[0-9]+)/$', views.PrivateScrollDetail.as_view(),
+        name='private-scroll-detail'),
 ]
 
 from django.conf.urls.static import static

@@ -5,15 +5,22 @@ var axios = require('axios');
 
 
 const initialState = {
-  isLoading: false,
+  loading: false,
   user: 'MARY',
-  userName: '',
+  userName: null,
   userImage: '',
-  userToken: '',
+  userToken: null,
 };
 
 const myReducer = (state = initialState, action) => {
   switch (action.type) {
+    case 'SET_LOADING':
+    console.log('ssetting loading to ' + action.loading.toString())
+      return {
+        ...state,
+        loading: action.loading
+      }
+
     case 'ADD_USER':
         console.log('add_user action:');
         console.log(action)

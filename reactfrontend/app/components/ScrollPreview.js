@@ -11,7 +11,7 @@ var PropTypes = require('prop-types');
 import MicList from './MicList'
 
 
-class Scroll extends React.Component {
+class ScrollPreview extends React.Component {
 	constructor(props){
 		super(props);
 
@@ -23,20 +23,11 @@ class Scroll extends React.Component {
 		}
 		// this.changeHUD = props.changeHUD;
 
-		this.handleClick = this.handleClick.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 		this.handleKeyDown = this.handleKeyDown.bind(this);
 		this.scantextForWidgetCode = this.scanTextForWidgetCode.bind(this);
 	}
 
-	handleClick() {
-		console.log('click')
-		axios.patch('http://localhost:3000/scrolls/'+this.state.id+'/', {
-			'text' : this.state.text,
-			// 'id': this.state.id
-		}).then( (response) => (console.log(response)))
-		.catch( (error) => ( console.log(error)))
-	}
 
 	handleChange(event) {
 		var value = event.target.value;
@@ -98,9 +89,6 @@ class Scroll extends React.Component {
 				                  onChange={this.handleChange} />
 			 
 
-				<button className='' onClick={this.handleClick}>
-					Click to save 
-				</button>
 				
 
 			</div>
@@ -108,7 +96,7 @@ class Scroll extends React.Component {
 	}
 }
 
-Scroll.defaultProps = {
+ScrollPreview.defaultProps = {
   text: `sherri my dear
 			it has been so Loading
 
@@ -118,6 +106,5 @@ Scroll.defaultProps = {
   speed: 300
 };
 
-module.exports = { Scroll}
-// export Scroll;
-// export ScrollContainer;
+module.exports = ScrollPreview
+

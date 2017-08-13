@@ -100,7 +100,7 @@ export default class MicRecorder extends React.Component {
           : this.state.recordedBlob.blobURL} />
         <button onClick={this.startRecording} type="button">Start</button>
         <button onClick={this.stopRecording} type="button">Stop</button>
-        <button onClick={this.saveRecording} >Save</button>
+        <button onClick={this.saveRecording} >Save Mic</button>
       </div>
     );
   }

@@ -2,41 +2,8 @@ import React from 'react';
 import axios from 'axios';
 
 import { ReactMic } from 'react-mic';
+import MicPlayer from './MicPlayer';
 
-
-
-//Mini Mic for Recorded Mic Below
-class AudioMic extends React.Component {
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      micID: null,
-      // description: 'no descr',  //in props
-      // url: null, in props
-      blob: null
-    }
-  }
-
-  componentDidMount() {
-    axios.get(this.props.url, { responseType: 'blob' })
-      .then(function (response) {
-
-        var micBlob = response.data
-        this.setState(function (prevState) {
-          return { blob: URL.createObjectURL(micBlob) }
-        })
-      }.bind(this)
-      )
-  }
-
-  render() {
-    return (<div>
-      <audio controls src={this.state.blob} /> {this.props.description}
-    </div>)
-  }
-}
 
 
 export class MicList extends React.Component {
@@ -89,7 +56,7 @@ export class MicList extends React.Component {
           {mic.url}
           {mic.description}
 
-        <AudioMic url={mic.url}
+        <MicPlayer url={mic.url}
                   description={mic.description} /> 
 
       </li>)

@@ -13,7 +13,6 @@ from pygments.lexers import get_lexer_by_name
 from pygments.formatters.html import HtmlFormatter
 from pygments import highlight
 
-
 LEXERS = [item for item in get_all_lexers() if item[1]]
 LANGUAGE_CHOICES = sorted([(item[1][0], item[0]) for item in LEXERS])
 STYLE_CHOICES = sorted((item, item) for item in get_all_styles())
@@ -32,7 +31,6 @@ class Snippet(models.Model):
     class Meta:
         ordering = ('created',)
 
-
     def save(self, *args, **kwargs):
         """
         Use the `pygments` library to create a highlighted HTML
@@ -47,24 +45,33 @@ class Snippet(models.Model):
         super(Snippet, self).save(*args, **kwargs)
 
 
+from haikunator import Haikunator
+
 
 class Scroll(models.Model):
-	title = models.CharField(max_length=200, unique=True)
-	author = models.ForeignKey(User, blank=True, null=True)
-	text = models.CharField(max_length=1000)
+    title = models.CharField(max_length=200, default='')
+    author = models.ForeignKey(User, blank=True, null=True)
+    text = models.CharField(max_length=1000, default='')
+
+
+    def save(self, *args, **kwargs):
+
+        if self.title == '':
+            self.title = Haikunator().haikunate()
+        super(Scroll, self).save(*args, **kwargs)
 
 
 class Pic(models.Model):
     # file will be uploaded to MEDIA_ROOT/pic_uploads
     owner = models.ForeignKey('auth.User', related_name='pics', null=True)
-    image = models.ImageField(upload_to ='pic_uploads/')
+    image = models.ImageField(upload_to='pic_uploads/')
     scroll = models.ForeignKey(Scroll, blank=True, null=True)
     info = models.CharField(max_length=20, blank=True, null=True)
 
 
 class Mic(models.Model):
     owner = models.ForeignKey('auth.User', related_name='mics', null=True)
-    file = models.FileField(upload_to ='mic_uploads/', null=True)
+    file = models.FileField(upload_to='mic_uploads/', null=True)
     scroll = models.ForeignKey(Scroll, blank=True, null=True)
     description = models.CharField(max_length=200, blank=True, null=True)
 

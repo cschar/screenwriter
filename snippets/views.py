@@ -186,16 +186,45 @@ class PrivateScrollList(APIView):
         #but ScrollLIst view below gives data.results hm
         return Response(serializer.data)
 
+    def post(self, request, format=None):
+        # import ipdb; ipdb.set_trace();
+        serializer = ScrollSerializer(data=request.data,
+                                      context={'request': request})
+        if serializer.is_valid():
 
-class ScrollList(generics.ListCreateAPIView):
-    # permission_classes = (permissions.IsAuthenticated,)
+            serializer.save(author=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PrivateScrollDetail(APIView):
     authentication_classes = (TokenAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     queryset = Scroll.objects.all()
     serializer_class = ScrollSerializer
 
+    def get_object(self, pk):
+        try:
+            return Scroll.objects.get(pk=pk)
+        except Scroll.DoesNotExist:
+            raise Http404
 
-class ScrollDetail(generics.RetrieveUpdateAPIView):
+    def delete(self, request, *args, **kwargs):
+        scroll = self.get_object(kwargs['pk'])
+        if scroll.author != request.user:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        scroll.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+class ScrollList(generics.ListAPIView):
+    queryset = Scroll.objects.all()
+    serializer_class = ScrollSerializer
+
+class ScrollDetail(generics.RetrieveAPIView):
     queryset = Scroll.objects.all()
     serializer_class = ScrollSerializer
 
@@ -231,12 +260,12 @@ class MicList(APIView):
 
     def get(self, request, format=None):
         mic = Mic.objects.all()
-        serializer = MicSerializer(mic, many=True)
+        serializer = MicSerializer(mic, many=True, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, format=None):
         # import ipdb; ipdb.set_trace();
-        serializer = MicSerializer(data=request.data)
+        serializer = MicSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
            file = serializer.validated_data['file']
            file.name = file.name + '.webm'

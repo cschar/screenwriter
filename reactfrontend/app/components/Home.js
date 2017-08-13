@@ -8,7 +8,21 @@ var axios = require('axios');
 
 import GoogleLogin from 'react-google-login';
 // import FontAwesome from 'react-fontawesome';
+import ReactLoading from 'react-loading';
+import Button from 'react-bootstrap/lib/Button';
+import Col from 'react-bootstrap/lib/Col';
+import Row from 'react-bootstrap/lib/Row';
 
+ 
+ //make this a crazy component with clipart style images
+ //kandinsky stuff
+const Loader = () => (
+	   <div>
+	   <h2>Loading</h2>
+    <ReactLoading type={'balls'} color={'#adf'} height='267' width='175' />
+    </div>
+);
+ 
 
 const logout = () => {
 	store.dispatch({
@@ -20,6 +34,10 @@ const logout = () => {
 const responseGoogle = (response) => {
 	console.log(response);
 	store.dispatch({
+			type:'SET_LOADING',
+			loading: true
+		})
+	store.dispatch({
 			type:'SET_USER_INFO',
 			userName: response.profileObj.givenName,
 		  userImage: response.profileObj.imageUrl,
@@ -27,28 +45,33 @@ const responseGoogle = (response) => {
 		})
 
 
+
 	//call server , register user with response.tokenId
 	axios.post('http://localhost:3000/client-google-oauth2-login/', {
 			'access_token' : response.accessToken
 			 
-		}).then( (response) => (
+		}).then( function(response){
 
+
+			//stop loading
 			store.dispatch({
 				type:'SET_USER_TOKEN',
 				userToken: response.data.token
 			})
+			store.dispatch({
+			type:'SET_LOADING',
+			loading: false
+		})
 
-	))
+	})
 		.catch( (error) => ( console.log(error)))
 
 }
 
 const mapStateToProps = function(store) {
-	console.log("mapping state to porops")
-	console.log(store.todos)
-	console.log(store.myReducer)
 
   return {
+  	loading: store.myReducer.loading,
     userName: store.myReducer.user,
     daGoogleImage: store.myReducer.userImage,
     daGoogleName: store.myReducer.userName,
@@ -74,6 +97,7 @@ class Home extends React.Component {
 
 	render () {
 
+		//AUTH BUTTON
 		var auth_button;
 		if (!this.props.userToken){
 			auth_button = (<div><h2> Login </h2>
@@ -82,23 +106,42 @@ class Home extends React.Component {
     
     onSuccess={responseGoogle}
     onFailure={responseGoogle}>
-   Google Login </GoogleLogin></div>)
+   Google Login </GoogleLogin>
+				
+		
+   </div>)
 		 }else{
-		 		auth_button = ( <div><h2> Logout </h2>
-		 				<button onClick={function (){
+		 		auth_button = ( <div>
+		 				<Button onClick={function (){
 		 					console.log('click')
 		 					store.dispatch({
 		 						type: 'DEL_USER_INFO'
 		 					})
 		 				}}
 
-		 				> logout </button>
+		 				> <h2>logout </h2> </Button>
 		 			</div>
 		 			)
 		 }
 		
+			//LOADER
+		 let loading = null;
+		 if (this.props.loading){
+		  loading = (
+		 <div className='loading-container'>
+				 Loading 
+				<div className='loader'></div>
+		 </div>)
+		  return loading;
+		  }
+
+
 		return (
 			<div className='home-container'>
+				
+				<div className='auth-box'>
+
+				</div>
 
 				<h1> Scroll screenwriter </h1>
 
@@ -112,14 +155,8 @@ class Home extends React.Component {
 			{this.props.userToken}
     
 		 </button>
-
 				{auth_button}
 
-
-				<h3> Scroll screenwriter </h3>
-				<Link className='button' to='/scrolls'>
-				scrolls
-				</Link>
 
 			</div>
 

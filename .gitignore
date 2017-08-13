@@ -6,6 +6,7 @@ reactfrontend/node_modules
 #django
 db.sqlite3
 media
+scroll_fixture.json
 
 #python
 *.pyc

@@ -6,6 +6,8 @@ import MicList from './MicList'
 import {Link} from 'react-router-dom'
 import TextareaAutosize from 'react-autosize-textarea';
 
+import store from '../store'
+import { connect } from 'react-redux';
 
 /*
 Duplicates scroll stuff , 
@@ -128,15 +130,41 @@ class ScrollDetail extends React.Component {
 				                  onChange={this.handleChange} />
 			 
 
+				<div className='scroll-buttons'>
 				<button className='' onClick={this.handleClick}>
-					Click to save 
+						Click to save text
 				</button>
 				
+				<button onClick={function(){
+
+		var token = 'Token ' + this.props.userToken;
+    axios.defaults.headers.common['Authorization'] = token;
+		axios.delete('http://localhost:3000/myscrolls/' + this.props.match.params.id + '/')
+		.then( function(response){
+			window.location = '/myscrolls'
+		}.bind(this))
+		.catch( (error) => ( console.log(error)))
+				}.bind(this)}>
+				  Delete
+				</button>
+				</div>
+
 
 			</div>
 			</div>
 		)
 	}
 }
+
+const mapStateToProps = function(store) {
+  return {
+    userName: store.myReducer.user,
+    daGoogleImage: store.myReducer.userImage,
+    daGoogleName: store.myReducer.userName,
+    userToken: store.myReducer.userToken
+  };
+}
+
+ScrollDetail = connect(mapStateToProps)(ScrollDetail)
 
 module.exports = ScrollDetail;
