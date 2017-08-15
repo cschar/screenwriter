@@ -8,7 +8,9 @@ const persistedState = localStorage.getItem('reduxState')
  	: {}
 
 //if loading somehow bugs out 
-persistedState.myReducer.loading = false;
+if (persistedState.myReducer){
+	persistedState.myReducer.loading = false;
+}
 console.log("initial store")
 console.log(persistedState)
 //provided persistedState as initial argument to createStore

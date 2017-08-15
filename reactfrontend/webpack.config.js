@@ -52,12 +52,15 @@ var config = {
 };
 
 if (process.env.NODE_ENV === 'production') {
+  console.log("Building for Prod")
+  console.log('using')
+  console.log('api_hostname:' + process.env.API_HOSTNAME.toString())
   config.plugins.push(
       //set node environment inside code
       new webpack.DefinePlugin({
         'process.env': {
-          'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-          // 'NODE_ENV': JSON.stringify('production')
+          'NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+          'API_HOSTNAME': JSON.stringify(process.env.API_HOSTNAME)
         }
       }),
       new webpack.optimize.UglifyJsPlugin()

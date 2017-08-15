@@ -24,6 +24,9 @@ const mapStateToProps = function(store) {
 }
 window.aapi = api;
 
+const responseGoogleError = (response) => {
+	console.log(response);
+}
 const responseGoogle = (response) => {
 	console.log(response);
 	store.dispatch({
@@ -92,7 +95,7 @@ if (!this.props.userToken){
 				<GoogleLogin
     clientId="766018239151-af6g358s6j3n7a5499cb5ac3n7lcn6bh.apps.googleusercontent.com"
     onSuccess={responseGoogle}
-    onFailure={responseGoogle}>
+    onFailure={responseGoogleError}>
    Google Login </GoogleLogin>
 				
    			</div>)
