@@ -6,6 +6,7 @@ var axios = require('axios');
 
 const initialState = {
   loading: false,
+  upgraded: false,
   user: 'MARY',
   userName: null,
   userImage: '',
@@ -36,6 +37,12 @@ const myReducer = (state = initialState, action) => {
         userName: action.userName,
         userImage: action.userImage
       }
+    case 'SET_USER_UPGRADE': 
+      return {
+        ...state,
+        upgraded: action.upgraded
+      }     
+
     case 'SET_USER_TOKEN':
     var token = 'Token ' + action.userToken;
     // var token = 'Token ' + this.props.userToken;

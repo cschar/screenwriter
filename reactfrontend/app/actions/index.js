@@ -5,13 +5,7 @@ export const addTodo = (text) => ({
   text
 })
 
-// export const hideLoading = () => ({type: 'HIDE_LOADING'})
-// export const showLoading = () => ({type: 'SHOW_LOADING'})
 
-export const addUser = (text) => ({
-  type: 'ADD_USER',
-  text: text
-})
 
 export const setUserInfo = (userName, userImage) => ({
   type: 'SET_USER_INFO',

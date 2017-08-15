@@ -65,6 +65,7 @@ export default class MicRecorder extends React.Component {
       })
       .catch(function (err) {
         console.log('error in file upload')
+        alert("upgraded account required")
         output.className = '';
         output.innerHTML = err.message;
       });
@@ -90,7 +91,7 @@ export default class MicRecorder extends React.Component {
         <p> blob is: {this.state.recordedBlob === null
           ? 'none'
           : this.state.recordedBlob.blobURL} </p>
-        <label> Descripton
+        <label> Recording Descripton
             <input id='recDescription' type='text'
             value={this.state.description}
             onChange={this.updateDescription} />
@@ -100,7 +101,8 @@ export default class MicRecorder extends React.Component {
           : this.state.recordedBlob.blobURL} />
         <button onClick={this.startRecording} type="button">Start</button>
         <button onClick={this.stopRecording} type="button">Stop</button>
-        <button onClick={this.saveRecording} >Save Mic</button>
+        <button onClick={this.saveRecording} disabled={!this.props.upgraded}>Save Mic</button>
+        <label> { this.props.upgraded ? '' : 'Upgrade account to save mic' } </label>
       </div>
     );
   }

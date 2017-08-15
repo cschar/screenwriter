@@ -59,10 +59,8 @@ class ScrollListPublic extends React.Component {
 		// console.log(this.state.scrolls)
 		var scrolls = this.state.scrolls.map(function (scroll){
 			return ( <li key={scroll.id}>
-								 <h3> {scroll.id} <Link to={'/scrolls/'+scroll.id}>
-									Edit 
-								</Link>
-								</h3>
+								 <h3> {scroll.id} {scroll.title}
+									</h3>
 								 
 							
 			           <ScrollPreview className=''

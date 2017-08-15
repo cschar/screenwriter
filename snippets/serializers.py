@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from snippets.models import Snippet, LANGUAGE_CHOICES, STYLE_CHOICES, Scroll, Pic, Mic
+from snippets.models import Scroll, Pic, Mic
 
 #
 # class SnippetSerializer(serializers.Serializer):
@@ -33,25 +33,12 @@ from snippets.models import Snippet, LANGUAGE_CHOICES, STYLE_CHOICES, Scroll, Pi
 from django.contrib.auth.models import User
 
 
-class SnippetSerializer(serializers.HyperlinkedModelSerializer):
-    owner = serializers.ReadOnlyField(source='owner.username')
-    highlight = serializers.HyperlinkedIdentityField(view_name='snippet-highlight', format='html')
-
-    class Meta:
-        model = Snippet
-        fields = ('url', 'id', 'highlight', 'owner',
-                  'title', 'code', 'linenos', 'language', 'style')
-
-
-
-
 class UserSerializer(serializers.HyperlinkedModelSerializer):
-    snippets = serializers.PrimaryKeyRelatedField(many=True, queryset=Snippet.objects.all())
-    # snippets = serializers.HyperlinkedRelatedField(many=True, view_name='snippet-detail', read_only=True)
+    scrolls = serializers.PrimaryKeyRelatedField(many=True, queryset=Scroll.objects.all())
 
     class Meta:
         model = User
-        fields = ('url', 'id', 'username', 'snippets')
+        fields = ('url', 'id', 'username', 'scrolls')
 
 
 class MicSerializer(serializers.ModelSerializer):
@@ -59,7 +46,7 @@ class MicSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Mic
-        # fields = ('id', 'url', 'scroll', 'owner', 'description')
+        # fields = ('id', 'url', 'scroll', 'owner', ='description')
         fields = ('id', 'file', 'scroll', 'owner', 'description')
 
 

@@ -1,24 +1,25 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.shortcuts import render
 
-from rest_framework import status
+from django.http import Http404
+
+from snippets.models import Scroll, Pic, Mic, AccountInfo
+from snippets.serializers import ScrollSerializer, PicSerializer, MicSerializer
+from snippets.serializers import UserSerializer
+
+from django.contrib.auth.models import User, AnonymousUser
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.authtoken.models import Token
+from rest_framework import generics
+from rest_framework import permissions
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from snippets.models import Snippet, Scroll, Pic, Mic, AuthInfo
-from snippets.permissions import IsOwnerOrReadOnly
-from snippets.serializers import SnippetSerializer, ScrollSerializer, PicSerializer, MicSerializer
-
-from snippets.models import Snippet
-from snippets.serializers import SnippetSerializer
-from django.http import Http404
+from rest_framework.reverse import reverse
 from rest_framework.views import APIView
-from rest_framework.response import Response
 from rest_framework import status
 
-from rest_framework import renderers
-from rest_framework.response import Response
+import requests
 
 
 # class SnippetList(APIView):
@@ -66,34 +67,6 @@ from rest_framework.response import Response
 #         snippet.delete()
 #         return Response(status=status.HTTP_204_NO_CONTENT)
 
-from snippets.serializers import UserSerializer
-from django.contrib.auth.models import User, AnonymousUser
-
-from snippets.models import Snippet
-from snippets.serializers import SnippetSerializer
-from rest_framework import generics
-from rest_framework import permissions
-
-
-class SnippetList(generics.ListCreateAPIView):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-
-
-    queryset = Snippet.objects.all()
-    serializer_class = SnippetSerializer
-
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
-
-
-
-class SnippetDetail(generics.RetrieveUpdateDestroyAPIView):
-
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
-                      IsOwnerOrReadOnly,)
-
-    queryset = Snippet.objects.all()
-    serializer_class = SnippetSerializer
 
 
 
@@ -107,11 +80,21 @@ class UserDetail(generics.RetrieveAPIView):
     serializer_class = UserSerializer
 
 
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework.reverse import reverse
+UPGRADE_CODE = 'kermitthefrog'
+class UpgradeAccount(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
 
-from rest_framework.authtoken.models import Token
+    def post(self, request):
+        # import ipdb; ipdb.set_trace();
+
+        if request.data['upgradeCode'] == UPGRADE_CODE:
+            accinfo = AccountInfo.objects.get(user=request.user)
+            accinfo.upgraded = True
+            accinfo.save()
+            return Response(status=status.HTTP_202_ACCEPTED)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
 
 @api_view(['POST'])
 def google_oauth2_login(request):
@@ -121,7 +104,6 @@ def google_oauth2_login(request):
     # import ipdb; ipdb.set_trace();
 
     access_token = request.data['access_token']
-    import requests
     authorization_header = {"Authorization": "OAuth %s" % access_token}
     r = requests.get("https://www.googleapis.com/oauth2/v2/userinfo",
                    headers=authorization_header)
@@ -131,20 +113,17 @@ def google_oauth2_login(request):
         return Response({}, status=status.HTTP_401_UNAUTHORIZED)
     else:
         user_data = r.json()
-        print 'verifying oauth access_token'
-        print user_data
-        #create / login user
-        #send back token to use api
         user, _ = User.objects.get_or_create(username=user_data['given_name'],
                                              email=user_data['email'])
+        #TODO: Signal on user save
+        account_info, _ = AccountInfo.objects.get_or_create(user=user)
 
         token, _ = Token.objects.get_or_create(user=user)
 
         return Response({
-            'token': token.key
+            'token': token.key,
+            'upgraded': account_info.upgraded
         })
-
-from rest_framework.authentication import TokenAuthentication
 
 
 
@@ -152,18 +131,8 @@ from rest_framework.authentication import TokenAuthentication
 def api_root(request, format=None):
     return Response({
         'users': reverse('user-list', request=request, format=format),
-        'snippets': reverse('snippet-list', request=request, format=format)
+        'scrolls': reverse('scroll-list', request=request, format=format)
     })
-
-
-class SnippetHighlight(generics.GenericAPIView):
-    queryset = Snippet.objects.all()
-    renderer_classes = (renderers.StaticHTMLRenderer,)
-
-    def get(self, request, *args, **kwargs):
-        snippet = self.get_object()
-        return Response(snippet.highlighted)
-
 
 
 
@@ -210,6 +179,16 @@ class PrivateScrollDetail(APIView):
         except Scroll.DoesNotExist:
             raise Http404
 
+    def patch(self, request, *args, **kwargs):
+        scroll = self.get_object(kwargs['pk'])
+        if scroll.author != request.user:
+            #replace with custom permission class
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        scroll.text = request.data['text']
+        scroll.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
     def delete(self, request, *args, **kwargs):
         scroll = self.get_object(kwargs['pk'])
         if scroll.author != request.user:
@@ -230,7 +209,6 @@ class ScrollDetail(generics.RetrieveAPIView):
 
 
 class PicList(APIView):
-    # permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
 
     def get(self, request, format=None):
         pic = Pic.objects.all()
@@ -256,7 +234,7 @@ class PicDetail(generics.RetrieveAPIView):
 
 
 class MicList(APIView):
-    # permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
+    authentication_classes = (TokenAuthentication,)
 
     def get(self, request, format=None):
         mic = Mic.objects.all()
@@ -264,18 +242,23 @@ class MicList(APIView):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, format=None):
-        # import ipdb; ipdb.set_trace();
+
+        if not (permissions.IsAuthenticated().has_permission(request, request.user)
+                and AccountInfo.objects.get(user=request.user).upgraded):
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
         serializer = MicSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
-           file = serializer.validated_data['file']
-           file.name = file.name + '.webm'
+            file = serializer.validated_data['file']
+            file.name = file.name + '.webm'
 
-           serializer.save()
-           return Response(serializer.data, status=status.HTTP_201_CREATED)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class MicDetail(generics.RetrieveDestroyAPIView):
+
+class MicDetail(generics.RetrieveAPIView):
     queryset = Mic.objects.all()
     serializer_class = MicSerializer
 

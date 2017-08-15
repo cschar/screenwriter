@@ -35,8 +35,10 @@ class ScrollDetail extends React.Component {
 	}
 
 	handleClick() {
-		console.log('click')
-		axios.patch('http://localhost:3000/scrolls/'+this.state.id+'/', {
+		
+		var token = 'Token ' + this.props.userToken;
+    axios.defaults.headers.common['Authorization'] = token;
+		axios.patch('http://localhost:3000/myscrolls/'+this.state.id+'/', {
 			'text' : this.state.text,
 			// 'id': this.state.id
 		}).then( (response) => (console.log(response)))
@@ -120,7 +122,7 @@ class ScrollDetail extends React.Component {
 		return (
 			<div className='scroll-list-container'>
 			<div className='scroll'>
-				<MicRecorder scrollID={this.props.match.params.id}/>
+				<MicRecorder scrollID={this.props.match.params.id} upgraded={this.props.upgraded}/>
 				<MicList scrollID={this.props.match.params.id}/>
 				<TextareaAutosize id = {this.props.match.params.id} style={{ minHeight: 4}}
 				                  //two options: innerREF giving this.textarea OR onChange callback using event target textarea
@@ -158,9 +160,7 @@ class ScrollDetail extends React.Component {
 
 const mapStateToProps = function(store) {
   return {
-    userName: store.myReducer.user,
-    daGoogleImage: store.myReducer.userImage,
-    daGoogleName: store.myReducer.userName,
+  	upgraded: store.myReducer.upgraded,
     userToken: store.myReducer.userToken
   };
 }

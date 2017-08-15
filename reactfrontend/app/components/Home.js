@@ -6,10 +6,11 @@ import { connect } from 'react-redux';
 
 var axios = require('axios');
 
-import GoogleLogin from 'react-google-login';
+// import GoogleLogin from 'react-google-login';
 // import FontAwesome from 'react-fontawesome';
-import ReactLoading from 'react-loading';
-import Button from 'react-bootstrap/lib/Button';
+// import ReactLoading from 'react-loading';
+import AuthBox from './AuthBox';
+
 import Col from 'react-bootstrap/lib/Col';
 import Row from 'react-bootstrap/lib/Row';
 
@@ -31,42 +32,6 @@ const logout = () => {
 			})
 }
 
-const responseGoogle = (response) => {
-	console.log(response);
-	store.dispatch({
-			type:'SET_LOADING',
-			loading: true
-		})
-	store.dispatch({
-			type:'SET_USER_INFO',
-			userName: response.profileObj.givenName,
-		  userImage: response.profileObj.imageUrl,
-
-		})
-
-
-
-	//call server , register user with response.tokenId
-	axios.post('http://localhost:3000/client-google-oauth2-login/', {
-			'access_token' : response.accessToken
-			 
-		}).then( function(response){
-
-
-			//stop loading
-			store.dispatch({
-				type:'SET_USER_TOKEN',
-				userToken: response.data.token
-			})
-			store.dispatch({
-			type:'SET_LOADING',
-			loading: false
-		})
-
-	})
-		.catch( (error) => ( console.log(error)))
-
-}
 
 const mapStateToProps = function(store) {
 
@@ -97,32 +62,7 @@ class Home extends React.Component {
 
 	render () {
 
-		//AUTH BUTTON
-		var auth_button;
-		if (!this.props.userToken){
-			auth_button = (<div><h2> Login </h2>
-				<GoogleLogin
-    clientId="766018239151-af6g358s6j3n7a5499cb5ac3n7lcn6bh.apps.googleusercontent.com"
-    
-    onSuccess={responseGoogle}
-    onFailure={responseGoogle}>
-   Google Login </GoogleLogin>
-				
 		
-   </div>)
-		 }else{
-		 		auth_button = ( <div>
-		 				<Button onClick={function (){
-		 					console.log('click')
-		 					store.dispatch({
-		 						type: 'DEL_USER_INFO'
-		 					})
-		 				}}
-
-		 				> <h2>logout </h2> </Button>
-		 			</div>
-		 			)
-		 }
 		
 			//LOADER
 		 let loading = null;
@@ -145,17 +85,9 @@ class Home extends React.Component {
 
 				<h1> Scroll screenwriter </h1>
 
-
-				<div> <img src={this.props.daGoogleImage} /> </div>
-	<button className='button' onClick={this.handleTestDispatch}>
-
-		<h1>dispatch {this.props.userName}</h1>
-			{this.props.daGoogleImage}
-			{this.props.daGoogleName}
-			{this.props.userToken}
-    
-		 </button>
-				{auth_button}
+				
+				
+			<AuthBox />
 
 
 			</div>
