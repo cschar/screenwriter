@@ -1,6 +1,6 @@
 import React from 'react';
+import {api} from '../api';
 import axios from 'axios';
-
 import { ReactMic } from 'react-mic';
 import MicPlayer from './MicPlayer';
 
@@ -20,12 +20,12 @@ export class MicList extends React.Component {
   componentDidMount() {
 
     //Todo: pass scroll id from prop
-    axios.get('http://localhost:3000/scrolls/' + this.props.scrollID + '/')
+    api.axios.get('/scrolls/' + this.props.scrollID + '/')
       .then(function (response) {
         console.log(response.data);
         var micSet = response.data.mic_set;
 
-
+        //api instance cant do all
         axios.all(
           micSet.map(
             function (micData) {

@@ -4,7 +4,6 @@ var Link = require('react-router-dom').Link;
 import store from '../store'
 import { connect } from 'react-redux';
 
-var axios = require('axios');
 
 // import GoogleLogin from 'react-google-login';
 // import FontAwesome from 'react-fontawesome';
@@ -14,23 +13,6 @@ import AuthBox from './AuthBox';
 import Col from 'react-bootstrap/lib/Col';
 import Row from 'react-bootstrap/lib/Row';
 
- 
- //make this a crazy component with clipart style images
- //kandinsky stuff
-const Loader = () => (
-	   <div>
-	   <h2>Loading</h2>
-    <ReactLoading type={'balls'} color={'#adf'} height='267' width='175' />
-    </div>
-);
- 
-
-const logout = () => {
-	store.dispatch({
-				type:'DEL_USER_INFO',
-				userToken: response.data.token
-			})
-}
 
 
 const mapStateToProps = function(store) {
@@ -47,23 +29,10 @@ const mapStateToProps = function(store) {
 class Home extends React.Component {
 	constructor(props){
 		super(props);
-
-		this.handleTestDispatch = this.handleTestDispatch.bind(this);
 	}
 
-	handleTestDispatch() {
-		console.log('dispatching');
-		store.dispatch({
-			type:'ADD_USER',
-			text: '==='
-		})
-
-	}
 
 	render () {
-
-		
-		
 			//LOADER
 		 let loading = null;
 		 if (this.props.loading){
@@ -85,7 +54,7 @@ class Home extends React.Component {
 
 				<h1> Scroll screenwriter </h1>
 
-				
+
 				
 			<AuthBox />
 

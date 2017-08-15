@@ -1,6 +1,5 @@
 import React from 'react';
-import axios from 'axios'
-
+import {api} from '../api';
 import MicPlayer from './MicPlayer';
 
 
@@ -13,7 +12,7 @@ class RecentMics extends React.Component {
   }
 
   componentDidMount() {
-    axios.get('http://localhost:3000/mics/')
+    api.axios.get('/mics/')
       .then(function (response) {
         console.log(response)
 

@@ -8,6 +8,7 @@ import TextareaAutosize from 'react-autosize-textarea';
 
 import store from '../store'
 import { connect } from 'react-redux';
+import {api} from '../api';
 
 /*
 Duplicates scroll stuff , 
@@ -35,10 +36,7 @@ class ScrollDetail extends React.Component {
 	}
 
 	handleClick() {
-		
-		var token = 'Token ' + this.props.userToken;
-    axios.defaults.headers.common['Authorization'] = token;
-		axios.patch('http://localhost:3000/myscrolls/'+this.state.id+'/', {
+		api.axios.patch('/myscrolls/'+this.state.id+'/', {
 			'text' : this.state.text,
 			// 'id': this.state.id
 		}).then( (response) => (console.log(response)))
@@ -99,8 +97,7 @@ class ScrollDetail extends React.Component {
 
 
 	componentDidMount() {
-		let url = 'http://localhost:3000/scrolls/' + this.props.match.params.id +'/'
-		axios.get(url)
+		api.axios.get('scrolls/' + this.props.match.params.id +'/')
 		.then( function(resp){
 					console.log('axios scroll detail')
 					console.log(resp.data)
@@ -138,10 +135,8 @@ class ScrollDetail extends React.Component {
 				</button>
 				
 				<button onClick={function(){
-
-		var token = 'Token ' + this.props.userToken;
-    axios.defaults.headers.common['Authorization'] = token;
-		axios.delete('http://localhost:3000/myscrolls/' + this.props.match.params.id + '/')
+		
+		api.axios.delete('/myscrolls/' + this.props.match.params.id + '/')
 		.then( function(response){
 			window.location = '/myscrolls'
 		}.bind(this))

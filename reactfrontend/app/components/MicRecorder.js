@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import {api} from '../api';
 
 import { ReactMic } from 'react-mic';
 
@@ -57,7 +57,7 @@ export default class MicRecorder extends React.Component {
     console.log(data);
     console.log('posting to server')
 
-    axios.post('http://localhost:3000/mics/', data)
+    api.axios.post('/mics/', data)
       .then(function (res) {
         console.log('success')
         output.className = 'button';

@@ -4,10 +4,12 @@ var Link = require('react-router-dom').Link;
 import store from '../store'
 import { connect } from 'react-redux';
 
-var axios = require('axios');
+import {api} from '../api';
 
 import GoogleLogin from 'react-google-login';
 import Button from 'react-bootstrap/lib/Button';
+import Alert from 'react-bootstrap/lib/Alert';
+
 
 const mapStateToProps = function(store) {
 
@@ -20,7 +22,7 @@ const mapStateToProps = function(store) {
     userToken: store.myReducer.userToken
   };
 }
-
+window.aapi = api;
 
 const responseGoogle = (response) => {
 	console.log(response);
@@ -38,12 +40,14 @@ const responseGoogle = (response) => {
 
 
 	//call server , register user with response.tokenId
-	axios.post('http://localhost:3000/client-google-oauth2-login/', {
+	api.axios.post('/client-google-oauth2-login/', {
 			'access_token' : response.accessToken
 			 
 		}).then( function(response){
 
-
+			var token = 'Token ' + response.data.token;
+			api.axios.defaults.headers.common['Authorization'] = token;
+			
 			store.dispatch({
 				type:'SET_USER_TOKEN',
 				userToken: response.data.token
@@ -103,9 +107,8 @@ if (!this.props.userToken){
          
          <Button onClick={function(event){
          	console.log(this.props);
-         	var token = 'Token ' + this.props.userToken;
-    			axios.defaults.headers.common['Authorization'] = token;
-      		axios.post('http://localhost:3000/upgrade-account/',
+         	
+      		api.axios.post('/upgrade-account/',
       		 {'upgradeCode': this.state.upgradeCode})
 		      .then(function (res) {
 		        console.log(res)
@@ -123,8 +126,8 @@ if (!this.props.userToken){
 		 		)
 		 }else{
 		 	var upgradeWidget = (
-		 		<div> <h1> Upgraded Account </h1>
-		 		You can now save audio</div>
+		 		<div> <Alert bsStyle="warning"><h1> Upgraded Account </h1>
+		 		You can now save audio </Alert> </div>
 		 		)
 		 }
 
@@ -133,10 +136,8 @@ if (!this.props.userToken){
 		 		 <div> <img src={this.props.googleImage} /> </div>
 		 		 	<button className='button' onClick={this.handleTestDispatch}>
 
-		<h1>dispatch {this.props.googleName}</h1>
-			{this.props.googleImage}
+		<h1>Dispatch {this.props.googleName}</h1>
 			
-			{this.props.userToken}
     
 		 </button>
 		 		 {/*<div> <img src={this.props.googleImage} /> </div>*/}
@@ -146,7 +147,7 @@ if (!this.props.userToken){
 		 		 <br />
 
 		 				<Button onClick={function (){
-		 					console.log('click')
+		 					
 		 					store.dispatch({
 		 						type: 'DEL_USER_INFO'
 		 					})

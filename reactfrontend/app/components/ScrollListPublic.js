@@ -1,7 +1,7 @@
 var React = require('react');
 var queryString = require('query-string');
 
-var axios = require('axios');
+import {api} from '../api';
 import {Link} from 'react-router-dom'
 import TextareaAutosize from 'react-autosize-textarea';
 
@@ -39,7 +39,7 @@ class ScrollListPublic extends React.Component {
 
 
 	componentDidMount() {
-		axios.get('http://localhost:3000/scrolls/')
+		api.axios.get('/scrolls/')
 		.then( (resp) => (this.setState({
 			  		scrolls: resp.data.results
 			  	}))

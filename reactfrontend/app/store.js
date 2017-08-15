@@ -7,8 +7,9 @@ const persistedState = localStorage.getItem('reduxState')
  	? JSON.parse(localStorage.getItem('reduxState'))
  	: {}
 
+//if loading somehow bugs out 
 persistedState.myReducer.loading = false;
-// console.log("loading persistedState as ")
+console.log("initial store")
 console.log(persistedState)
 //provided persistedState as initial argument to createStore
 //https://stackoverflow.com/questions/33749759/read-stores-initial-state-in-redux-reducer/33791942#33791942

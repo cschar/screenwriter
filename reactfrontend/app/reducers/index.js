@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux'
 //import todos from './todos'
 //import visibilityFilter from './visibilityFilter'
-var axios = require('axios');
-
+// import {api} from '../api'
+import axios from 'axios'
 
 const initialState = {
   loading: false,
@@ -15,22 +15,13 @@ const initialState = {
 
 const myReducer = (state = initialState, action) => {
   switch (action.type) {
+    
     case 'SET_LOADING':
-    console.log('ssetting loading to ' + action.loading.toString())
       return {
         ...state,
         loading: action.loading
       }
 
-    case 'ADD_USER':
-        console.log('add_user action:');
-        console.log(action)
-        console.log(state);
-
-        return {
-        ...state,
-        user: action.text
-      }
     case 'SET_USER_INFO':
       return {
         ...state,
@@ -44,14 +35,13 @@ const myReducer = (state = initialState, action) => {
       }     
 
     case 'SET_USER_TOKEN':
-    var token = 'Token ' + action.userToken;
-    // var token = 'Token ' + this.props.userToken;
-    axios.defaults.headers.common['Authorization'] = token;
+      axios.defaults.headers.common['Authorization'] = 'Token ' + action.userToken;
       return {
         ...state,
         userToken: action.userToken
       }
     case 'DEL_USER_INFO':
+      axios.defaults.headers.common['Authorization'] = '';
       return initialState
 
     default:

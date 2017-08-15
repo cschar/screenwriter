@@ -77,3 +77,10 @@ August 13th 2017:
  - add some secure api calls for private scroll features
  - recentmic page
 
+
+August 14th 2017:
+
+- Make app 2 tier pricing thing w/ upgrade option (implement payment later haha)
+- Axios singleton, config root hostname
+- Deploy!
+

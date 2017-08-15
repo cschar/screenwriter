@@ -1,7 +1,7 @@
 var React = require('react');
 var queryString = require('query-string');
 
-var axios = require('axios');
+import {api} from '../api';
 import {Link} from 'react-router-dom'
 import TextareaAutosize from 'react-autosize-textarea';
 
@@ -35,9 +35,7 @@ class ScrollListPrivate extends React.Component {
 	}
 
 	addScroll() {
-		var token = 'Token ' + this.props.userToken;
-    axios.defaults.headers.common['Authorization'] = token;
-		axios.post('http://localhost:3000/myscrolls/')
+		api.axios.post('/myscrolls/')
 		.then( function(response){
 			this.setState(function(prevState){
 				var scrolls = prevState.scrolls;
@@ -56,13 +54,7 @@ class ScrollListPrivate extends React.Component {
 
 
 	componentDidMount() {
-		
-		//not working  in reducer...
-		var token = 'Token ' + this.props.userToken;
-    // var token = 'Token ' + this.props.userToken;
-    axios.defaults.headers.common['Authorization'] = token;
-
-		axios.get('http://localhost:3000/myscrolls/')
+		api.axios.get('/myscrolls/')
 		.then( function(resp){
 					console.log('axios myscrolls')
 					console.log(resp)
