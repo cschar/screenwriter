@@ -53,8 +53,7 @@ var config = {
 
 if (process.env.NODE_ENV === 'production') {
   console.log("Building for Prod")
-  console.log('using')
-  console.log('api_hostname:' + process.env.API_HOSTNAME.toString())
+  console.log('using api_hostname: ' + process.env.API_HOSTNAME.toString())
   config.plugins.push(
       //set node environment inside code
       new webpack.DefinePlugin({

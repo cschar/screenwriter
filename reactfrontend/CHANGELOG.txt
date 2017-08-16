@@ -84,3 +84,7 @@ August 14th 2017:
 - Axios singleton, config root hostname
 - Deploy!
 
+August 15th 2017:
+- Still Deploying.... setting nginx / letsencrypt / ansible etc..
+
+

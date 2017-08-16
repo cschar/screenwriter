@@ -34,11 +34,11 @@ from django.contrib.auth.models import User
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
-    scrolls = serializers.PrimaryKeyRelatedField(many=True, queryset=Scroll.objects.all())
+    scroll_set = serializers.PrimaryKeyRelatedField(many=True, queryset=Scroll.objects.all())
 
     class Meta:
         model = User
-        fields = ('url', 'id', 'username', 'scrolls')
+        fields = ('url', 'id', 'username', 'scroll_set')
 
 
 class MicSerializer(serializers.ModelSerializer):
