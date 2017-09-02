@@ -5,7 +5,7 @@ var Route = ReactRouter.Route;
 var Switch = ReactRouter.Switch;
 
 
-var Nav = require('./nav.js');
+var Nav = require('./Nav.js');
 
 import Home from './Home';
 

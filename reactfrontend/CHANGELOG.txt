@@ -85,6 +85,6 @@ August 14th 2017:
 - Deploy!
 
 August 15th 2017:
-- Still Deploying.... setting nginx / letsencrypt / ansible etc..
+- Deploying.... setting nginx / letsencrypt / ansible etc..
 
 

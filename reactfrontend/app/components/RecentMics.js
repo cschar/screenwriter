@@ -39,7 +39,7 @@ class RecentMics extends React.Component {
     }.bind(this))
 
     return (
-      <div >
+      <div className='recentMicContainer'>
         <h3>  RecentMics </h3>
            <ul>
           {mics}
