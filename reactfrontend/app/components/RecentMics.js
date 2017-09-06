@@ -12,6 +12,7 @@ class RecentMics extends React.Component {
   }
 
   componentDidMount() {
+  if(this.props.userToken){
     api.axios.get('/mics/')
       .then(function (response) {
         console.log(response)
@@ -23,9 +24,17 @@ class RecentMics extends React.Component {
               })
 
       }.bind(this));
+    }
   }
 
   render() {    
+
+    if(!this.props.userToken){
+      return (<div className='scroll-list-container'>
+          <h2> Requires Login </h2>
+        </div>
+        )
+    }
 
     var mics = this.state.mics.map(function (mic){
       return (<li key={mic.id}>

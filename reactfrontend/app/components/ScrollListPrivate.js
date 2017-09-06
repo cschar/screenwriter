@@ -54,16 +54,18 @@ class ScrollListPrivate extends React.Component {
 
 
 	componentDidMount() {
-		api.axios.get('/myscrolls/')
-		.then( function(resp){
-					console.log('axios myscrolls')
-					console.log(resp)
+		if(this.props.userToken){
+			api.axios.get('/myscrolls/')
+			.then( function(resp){
+						console.log('axios myscrolls')
+						console.log(resp)
 
-					this.setState({
-			  		scrolls: resp.data
-			  	})
-				}.bind(this))
-			.catch( (error) => ( console.log(error)));
+						this.setState({
+				  		scrolls: resp.data
+				  	})
+					}.bind(this))
+				.catch( (error) => ( console.log(error)));
+		}
 	}
 
 
