@@ -2,12 +2,12 @@
 
 #reactfrontend
 reactfrontend/node_modules
-reactfrontend/dist/*
+/reactfrontend/dist/*
 
 #django
 db.sqlite3
 media
-static
+/static
 scroll_fixture.json
 settingsprod.py
 

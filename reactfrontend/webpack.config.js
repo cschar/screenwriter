@@ -1,6 +1,9 @@
 
 var path = require('path');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+
+var CopyWebpackPlugin = require('copy-webpack-plugin');
+
 var webpack = require('webpack');
 // module.exports = {
 
@@ -47,7 +50,12 @@ var config = {
           'SOUNDCLOUD_APP_ID': JSON.stringify(process.env.SOUNDCLOUD_APP_ID)
           // 'NODE_ENV': JSON.stringify('production')
         }
-      })
+      }),
+     new CopyWebpackPlugin([
+            // {output}/screenwriter.ico
+            { from: 'static/screenwriter.ico' },
+      ])
+    
   ]
 };
 

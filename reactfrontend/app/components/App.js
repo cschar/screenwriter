@@ -5,8 +5,7 @@ var Route = ReactRouter.Route;
 var Switch = ReactRouter.Switch;
 
 
-var Nav = require('./Nav.js');
-
+import Nav  from './Nav';
 import Home from './Home';
 
 import {RecentMics} from './RecentMics';
