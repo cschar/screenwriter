@@ -42,6 +42,7 @@ REST_FRAMEWORK = {
 CORS_ORIGIN_WHITELIST = (
     'hostname.example.com',
     'localhost:8080',
+    'localhost:3000',
 )
 
 CORS_ALLOW_HEADERS = (
@@ -148,7 +149,6 @@ STATIC_ROOT = 'static/'
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, "/pic_uploads"),
-#     os.path.join(BASE_DIR, "/pic_folder"),
-# ]
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "/extra_static"),
+]

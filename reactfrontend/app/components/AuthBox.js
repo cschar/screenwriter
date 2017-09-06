@@ -7,6 +7,8 @@ import { connect } from 'react-redux';
 import {api} from '../api';
 
 import GoogleLogin from 'react-google-login';
+import FacebookLogin from 'react-facebook-login';
+
 import Button from 'react-bootstrap/lib/Button';
 import Alert from 'react-bootstrap/lib/Alert';
 
@@ -22,7 +24,50 @@ const mapStateToProps = function(store) {
     userToken: store.myReducer.userToken
   };
 }
-window.aapi = api;
+
+
+const responseFacebook = (response) => {
+  	
+  	console.log(response);
+	store.dispatch({
+			type:'SET_LOADING',
+			loading: true
+		})
+	store.dispatch({
+			type:'SET_USER_INFO',
+			userName: response.name.split(' ')[0],
+		  userImage: response.picture.data.url,
+
+		})
+
+
+	//call server , register user with response.tokenId
+	api.axios.post('/client-facebook-oauth2-login/', {
+			'access_token' : response.accessToken
+			 
+		}).then( function(response){
+
+			var token = 'Token ' + response.data.token;
+			api.axios.defaults.headers.common['Authorization'] = token;
+			
+			store.dispatch({
+				type:'SET_USER_TOKEN',
+				userToken: response.data.token
+			})
+			store.dispatch({
+				type:'SET_USER_UPGRADE',
+				upgraded: response.data.upgraded
+			})
+			store.dispatch({
+			type:'SET_LOADING',
+			loading: false
+		})
+
+	})
+		.catch( (error) => ( console.log(error)))
+}
+
+
 
 const responseGoogleError = (response) => {
 	console.log(response);
@@ -39,7 +84,6 @@ const responseGoogle = (response) => {
 		  userImage: response.profileObj.imageUrl,
 
 		})
-
 
 
 	//call server , register user with response.tokenId
@@ -69,6 +113,8 @@ const responseGoogle = (response) => {
 
 }
 
+
+
 class AuthBox extends React.Component {
 	  constructor(props) {
     super(props);
@@ -91,13 +137,24 @@ class AuthBox extends React.Component {
 		var auth_button;
 if (!this.props.userToken){
 			auth_button = (
-				<div><h2> Login </h2>
+				<div className='login-buttons-container'><h2> Login </h2>
+
+				<div>
 				<GoogleLogin
     clientId="766018239151-af6g358s6j3n7a5499cb5ac3n7lcn6bh.apps.googleusercontent.com"
     onSuccess={responseGoogle}
     onFailure={responseGoogleError}>
    Google Login </GoogleLogin>
-				
+   			</div>
+   			
+   			<div> 
+  <FacebookLogin
+    appId="275428902954715"
+    fields="name,email,picture"
+    textButton="Facebook Login"
+    callback={responseFacebook} />
+				</div>
+
    			</div>)
 		 }else{
 

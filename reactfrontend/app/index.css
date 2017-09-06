@@ -184,6 +184,11 @@ a {
   justify-content: center;
 }
 
+.login-buttons-container{
+  display: block;
+  padding: 20px;
+}
+
 .recentMicContainer{
    display: flex;
   flex-direction: column;
@@ -274,6 +279,7 @@ a {
     height: 5em;
   }
 }
+
 
 
 

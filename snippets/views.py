@@ -22,6 +22,7 @@ from rest_framework import status
 import requests
 
 
+
 # class SnippetList(APIView):
 #     """
 #     List all snippets, or create a new snippet.
@@ -96,6 +97,32 @@ class UpgradeAccount(APIView):
         return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
+#Bug: This doesnt allow a user to share google/facebook oauth login w/ same django username
+@api_view(['POST'])
+def facebook_oauth2_login(request):
+    access_token = request.data['access_token']
+
+    # graph = facebook.GraphAPI(access_token=access_token, version="2.10")
+    r = requests.get("https://graph.facebook.com/me/?fields=id,email,name&access_token=%s" % access_token)
+
+    if r.status_code != 200:  # 401
+        #invalid access_token was sent from client
+        return Response({}, status=status.HTTP_401_UNAUTHORIZED)
+    else:
+        user_data = r.json()
+
+        username = user_data['name'].split(' ')[0]
+        user, _ = User.objects.get_or_create(username=username + str(user_data['id']),
+                                             email=user_data['email'])
+
+        account_info, _ = AccountInfo.objects.get_or_create(user=user)
+        token, _ = Token.objects.get_or_create(user=user)
+
+        return Response({
+            'token': token.key,
+            'upgraded': account_info.upgraded
+        })
+
 @api_view(['POST'])
 def google_oauth2_login(request):
     """
@@ -113,7 +140,7 @@ def google_oauth2_login(request):
         return Response({}, status=status.HTTP_401_UNAUTHORIZED)
     else:
         user_data = r.json()
-        user, _ = User.objects.get_or_create(username=user_data['given_name'],
+        user, _ = User.objects.get_or_create(username=user_data['given_name']+str(user_data['id']),
                                              email=user_data['email'])
         #TODO: Signal on user save
         account_info, _ = AccountInfo.objects.get_or_create(user=user)

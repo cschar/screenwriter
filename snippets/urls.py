@@ -39,6 +39,9 @@ urlpatterns += [
 urlpatterns += [
     url(r'^client-google-oauth2-login/$', views.google_oauth2_login,
         name='google-oauth2-login'),
+    url(r'^client-facebook-oauth2-login/$', views.facebook_oauth2_login,
+        name='facebook-oauth2-login'),
+    
     url(r'^upgrade-account/$', views.UpgradeAccount.as_view(),
         name='upgrade-account'),
 

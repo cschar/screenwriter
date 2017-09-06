@@ -2,6 +2,7 @@
 
 #reactfrontend
 reactfrontend/node_modules
+reactfrontend/dist/*
 
 #django
 db.sqlite3
