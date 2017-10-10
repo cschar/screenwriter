@@ -1,6 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import {api} from '../api';
 import MicPlayer from './MicPlayer';
+
 
 
 class RecentMics extends React.Component {
@@ -58,5 +60,12 @@ class RecentMics extends React.Component {
   }
 }
 
-module.exports = {RecentMics};
+const mapStateToProps = function(store) {
+  return {
+    userToken: store.myReducer.userToken
+  };
+}
+
+export default connect(mapStateToProps)(RecentMics)
+
 

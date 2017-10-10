@@ -8,7 +8,7 @@ var Switch = ReactRouter.Switch;
 import Nav  from './Nav';
 import Home from './Home';
 
-import {RecentMics} from './RecentMics';
+import RecentMics from './RecentMics';
 import ScrollListPublic from './ScrollListPublic';
 import ScrollListPrivate from './ScrollListPrivate';
 import ScrollDetail from './ScrollDetail';
