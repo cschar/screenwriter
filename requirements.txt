@@ -21,7 +21,7 @@ Pillow==6.2.0
 ptyprocess==0.5.2
 Pygments==2.2.0
 pytz==2017.2
-requests==2.18.3
+requests==2.20.0
 scandir==1.5
 simplegeneric==0.8.1
 six==1.10.0
