@@ -7,7 +7,7 @@ Django==1.10
 django-cors-headers==2.1.0
 django-extensions==1.8.1
 django-webpack-loader==0.2.4
-djangorestframework==3.6.3
+djangorestframework==3.9.1
 enum34==1.1.6
 #mac
 #gnureadline==6.3.3
